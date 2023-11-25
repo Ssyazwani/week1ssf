@@ -2,6 +2,7 @@ package sg.com.practice.ssf.workshop13.model;
 
 import java.util.Date;
 
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 
@@ -16,6 +17,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @AllArgsConstructor
@@ -40,7 +42,22 @@ public class Contact {
     @Past(message ="Birth date must be past date")
     private Date dateOfBirth;
 
+    private String id;
+
+    public Contact(String name, String email, String phoneNumber, Date dateOfBirth) {
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.dateOfBirth = dateOfBirth;
+        this.id = Idgenerator.generateUniqueId();
+    }    
+    
+
+   
+
     
     
-    
+   
 }
+
+ 
