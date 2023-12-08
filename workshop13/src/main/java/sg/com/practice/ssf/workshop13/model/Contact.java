@@ -1,5 +1,7 @@
 package sg.com.practice.ssf.workshop13.model;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 
 
@@ -7,8 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Past;
@@ -32,12 +32,11 @@ public class Contact {
     @NotBlank(message="Oi, don't leave blank") //if u leave blank, it is an optional field
     private String email;
 
-    @Pattern(regexp ="\\(8|9)[0-9]{7}", message ="Invalid phone number entered")
-    @Size(min = 7)
+    //@Pattern(regexp ="\\(8|9)[0-9]{7}", message ="Invalid phone number entered")
+    @Pattern(regexp = "\\d{8}", message =" please type 8 numbers")
     private String phoneNumber;
 
-    @Min(value= 10, message="why are you here?")
-    @Max (value =100, message="yo, you are well aren't you")
+    //(min = 10, max = 100)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Past(message ="Birth date must be past date")
     private Date dateOfBirth;
@@ -50,7 +49,20 @@ public class Contact {
         this.phoneNumber = phoneNumber;
         this.dateOfBirth = dateOfBirth;
         this.id = Idgenerator.generateUniqueId();
-    }    
+    }
+
+    public static Contact fromString(String line) {
+        return null;
+    }   
+
+    public boolean Agelimit( LocalDate dateOfBirth , LocalDate currTime  ) { // put in controller
+        int age = Period.between(currTime, dateOfBirth).getYears();
+        if (age> 10 && age <100);
+        return true;
+    }
+
+    
+
     
 
    

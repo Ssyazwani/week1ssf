@@ -1,8 +1,15 @@
 package sg.com.practice.ssf.workshop13.controller;
 
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
 import sg.com.practice.ssf.workshop13.model.Contact;
@@ -24,47 +32,106 @@ import sg.com.practice.ssf.workshop13.repo.ContactRepo;
 public class Contactcontroller {
 
     @Autowired
-    ContactRepo Repo;
+    private ContactRepo contactRepo;
+
+    private final String dataDirectory = "C://data1";
+
 
     @GetMapping("/addContact")
     public String addContact(Model model) {
         Contact contact = new Contact();
-        model.addAttribute("contact", contact);
+        model.addAttribute("contact", contact); 
         return "addContact";
     }
 
     @PostMapping("/addContact")
     public String saveContact(
-            @Valid @ModelAttribute("contact") Contact con,
+            @Valid @ModelAttribute("contact") Contact contact,
             BindingResult result,
             Model model) throws IOException {
+            //@RequestParam LocalDate dateOfBirth 
+            //LocalDate currTime = DateTimeFormat;
+            // int age = Period.between(currTime, dateOfBirth).getYears();
+            // if (age> 10 && age <100);
+            //    return true;
+
+            //
+    
+
 
         if (result.hasErrors()) {
-            return "addContact";
+            return "addContact";// do not redirect
         }
 
-        String id = Idgenerator.generateUniqueId();
-        con.setId(id);
+        String generatedId = Idgenerator.generateUniqueId();
+        contact.setId(generatedId);
 
-    
-        Boolean resultResult = Repo.save(con);
+        Boolean saveResult = contactRepo.saveContact(contact);
 
-        model.addAttribute("savedContact", con);
-        model.addAttribute("generatedId", id);
+        model.addAttribute("savedContact", contact);
+        model.addAttribute("generatedId", generatedId);
 
-        return "redirect:/contact/list";
+        System.out.println(saveResult);
+
+        return "addContact";
     }
 
-    @GetMapping("contact/<id>")
-    public String getContact(@PathVariable("id")String id, Model model) {
+    @GetMapping("/contacts")
+    public String getContactList(Model model) {
+    contactRepo.loadContactsFromFile();
+    List<Contact> contacts = contactRepo.findAll();
+    model.addAttribute("cons", contacts);
+    System.out.println(contacts);
+    System.out.println("hi");
+    return "contacts"; 
+}
+
+
+    @GetMapping("/contact/{id}")
+    public String getContactById(@PathVariable String id, Model model) {
+        System.out.println("help");
+       
+        String filePath = Paths.get(dataDirectory, id + ".txt").toString();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            StringBuilder content = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("<br>");
+            }
+
+            model.addAttribute("fileContent", content.toString());
+        } catch (FileNotFoundException e) {
+        return "error";
+    } catch (IOException e) {
         
-        Contact contact = Repo.findById(id);
-        model.addAttribute("contact", contact);
-            
+    }
         return "contactDetails";
-        
     }
 }
+
+//UPDATE: http://localhost:8080/contact/contact/DLI3waG3
+
+ // public String addContact (@RequestParam String name
+     //                          @RequestParam ("email") String myEmail) ---> request single
+
+     // for alot of values
+     // public String addContract (@RequestParam MultivaluedMap<String,String)>form)
+
+     //java way
+     //public String addContact (@ModelAttribute Register register) if u create a java object
+     //( must have getters and setters) setEmail setName
+
+     // for POST: for multivaluemap 
+//           public String addContact(
+    // @RequestBody MVM <String,String>form) -->  return "result"
+
+
+
+
+
+
 
 
 

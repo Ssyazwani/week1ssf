@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Details</title>
+</head>
+<body>
+
+<h1>Contact Details</h1>
+
+<div th:if="${fileContent}">
+    <p th:utext="${fileContent}"></p>
+</div>
+
+<div th:unless="${fileContent}">
+    <p>Contact not found</p>
+</div>
+
+</body>
+</html>
+

@@ -1,5 +1,5 @@
 package sg.com.practice.ssf.workshop13.model;
-import java.security.SecureRandom;
+import java.security.SecureRandom; // allows more bytes than Random
 
 public class Idgenerator {
 
@@ -11,8 +11,8 @@ public class Idgenerator {
         SecureRandom random = new SecureRandom();
 
         for (int i = 0; i < sizelength; i++) {
-            int randomIndex = random.nextInt(Characters.length());
-            idBuilder.append(Characters.charAt(randomIndex));
+            int randomIndex = random.nextInt(Characters.length()); // it will randomly generate an index among the string called Characters by sizelength times
+            idBuilder.append(Characters.charAt(randomIndex)); // print out the char at the randomIndex generated and put them together to a string
         }
 
         return idBuilder.toString();
