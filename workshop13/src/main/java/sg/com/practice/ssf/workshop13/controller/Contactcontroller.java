@@ -12,9 +12,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,36 +47,37 @@ public class Contactcontroller {
     }
 
     @PostMapping("/addContact")
-    public String saveContact(
-            @Valid @ModelAttribute("contact") Contact contact,
-            BindingResult result,
-            Model model) throws IOException {
-            //@RequestParam LocalDate dateOfBirth 
-            //LocalDate currTime = DateTimeFormat;
-            // int age = Period.between(currTime, dateOfBirth).getYears();
-            // if (age> 10 && age <100);
-            //    return true;
+public String saveContact(
+        @Valid @ModelAttribute("contact") Contact contact,
+        BindingResult result,
+        Model model,
+        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dateOfBirth) throws IOException {
 
-            //
-    
+    LocalDate currTime = LocalDate.now();
+    int age = Period.between(dateOfBirth, currTime).getYears();
 
-
-        if (result.hasErrors()) {
-            return "addContact";// do not redirect
-        }
-
-        String generatedId = Idgenerator.generateUniqueId();
-        contact.setId(generatedId);
-
-        Boolean saveResult = contactRepo.saveContact(contact);
-
-        model.addAttribute("savedContact", contact);
-        model.addAttribute("generatedId", generatedId);
-
-        System.out.println(saveResult);
-
+    if (age < 10 && age > 100) {
+        FieldError err = new FieldError("contact", "dateOfBirth", "Cannot be young or old");
+        result.addError(err);
         return "addContact";
     }
+
+    if (result.hasErrors()) {
+        return "addContact";
+    }
+
+    String generatedId = Idgenerator.generateUniqueId();
+    contact.setId(generatedId);
+
+    Boolean saveResult = contactRepo.saveContact(contact);
+
+    model.addAttribute("savedContact", contact);
+    model.addAttribute("generatedId", generatedId);
+
+    System.out.println(saveResult);
+
+    return "addContact";
+}
 
     @GetMapping("/contacts")
     public String getContactList(Model model) {
