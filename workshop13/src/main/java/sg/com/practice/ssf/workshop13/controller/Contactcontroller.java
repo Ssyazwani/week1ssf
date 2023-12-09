@@ -47,7 +47,7 @@ public class Contactcontroller {
     }
 
     @PostMapping("/addContact")
-public String saveContact(
+      public String saveContact(
         @Valid @ModelAttribute("contact") Contact contact,
         BindingResult result,
         Model model,
