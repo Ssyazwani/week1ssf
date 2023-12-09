@@ -23,14 +23,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="cons: ${contacts}">
-                    <td><a th:if="${cons != null}" th:href="@{'/contact/contact/' + ${cons.id}}" th:text="${cons.name}"></a>
-                    </a></td>
-                    <td th:text="${cons.email}"></td>
-                    <td th:text="${cons.phoneNumber}"></td>
-                    <td th:text="${cons.dateOfBirth}"></td>
-                    <td th:if="${cons != null}" th:text="${cons.id}"></td>
+                <tr th:each="contacts: ${contacts}">
+                    <td><a th:if="${contacts != null}" th:href="@{/contact/contact/{id}(id=${contacts.id})}" th:text="${contacts.name}"></a></td>
+                    <td th:if="${contacts != null}" th:text="${contacts.name}"></td>
+                    <td th:if="${contacts != null}" th:text="${contacts.email}"></td>
+                    <td th:if="${contacts != null}" th:text="${contacts.phoneNumber}"></td>
+                    <td th:if="${contacts != null}" th:text="${contacts.dateOfBirth}"></td>
+                    <td th:if="${contacts != null}" th:text="${contacts.id}"></td>
                 </tr>
+            </tbody>
 
                  <!-- <ul>
                     <li th:each="contact : ${contacts}">

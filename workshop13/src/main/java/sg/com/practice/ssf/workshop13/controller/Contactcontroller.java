@@ -80,7 +80,7 @@ public class Contactcontroller {
     public String getContactList(Model model) {
     contactRepo.loadContactsFromFile();
     List<Contact> contacts = contactRepo.findAll();
-    model.addAttribute("cons", contacts);
+    model.addAttribute("contacts", contacts);
     System.out.println(contacts);
     System.out.println("hi");
     return "contacts"; 
